@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Tracking</title>
+  <meta name="description" content="Tracking">
+  <meta name="author" content="">
+
+</head>
+
+<body>
+
+<h1>This site not tracks you.</h1>
+<small>This page requires js enabled.</small>
+<pre id="tracking_info">
+</pre>
+
+<script>
+
+	function httpGet(url, reqListener){
+		var request = new XMLHttpRequest();
+		request.addEventListener("load", function(){
+			reqListener(request);
+		});		
+		request.open("GET", url);
+		request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+		request.send();
+	}
+	
+	httpGet("/track.jpg", function(req){
+		var eTag = req.getResponseHeader('ETag');
+		httpGet("/tracking_details/"+eTag, function(req){
+			document.getElementById("tracking_info").innerHTML  = req.responseText || "Could not retrive info.";
+		});
+	});
+
+</script>
+</body>
+</html>
